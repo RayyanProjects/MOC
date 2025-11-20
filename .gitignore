@@ -1,0 +1,9 @@
+# Build and binaries
+build/
+*.o
+*.out
+*.asm
+
+# Dot files except .gitignore
+.*
+!.gitignore
