@@ -42,6 +42,6 @@ private:
     char consume();
 
     const std::string m_src;
-    long unsigned m_index = 0;
+    size_t m_index = 0;
 };
 
