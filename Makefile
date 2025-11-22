@@ -1,5 +1,5 @@
 CC      := g++
-CFLAGS  := -Wall -Wextra -g
+CFLAGS  := -std=c++20 -Wall -Wextra -g
 
 SRC_DIR := src
 BUILD_DIR := build

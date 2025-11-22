@@ -1,0 +1,4 @@
+let x = 46;
+let y = 123;
+let z = x;
+exit(z);

@@ -9,7 +9,12 @@ enum class TokenType
 {
     TOKEN_EXIT,
     TOKEN_INT,
-    TOKEN_SEMI
+    TOKEN_SEMI,
+    TOKEN_LPREN,
+    TOKEN_RPREN,
+    TOKEM_IDENT,
+    TOKEN_LET,
+    TOKEN_EQ
 };
 
 struct Token
@@ -28,15 +33,15 @@ public:
     
     std::vector<Token> Tokenize();
 private:
-    [[nodiscard]]std::optional<char> peak(int ahead = 1) const
+    [[nodiscard]] std::optional<char> peek(int offset = 0) const
     {
-        if (m_index + ahead > m_src.length())
+        if (m_index + offset >= m_src.length())
         {
             return {};
         }
         else 
         {
-            return m_src.at(m_index);
+            return m_src.at(m_index + offset);
         }
     }
     char consume();

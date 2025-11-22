@@ -2,6 +2,7 @@
 #include "./lexer.h"
 #include "./generation.h"
 #include <cctype>
+#include <cerrno>
 #include<iostream>
 #include<fstream>
 #include<string>
@@ -28,20 +29,20 @@ int main(int argc, char* argv[])
     std::vector<Token> tokens = lexer.Tokenize();
 
     Parser parser(std::move(tokens));
-    std::optional<NodeExit> tree = parser.Parse();
+    std::optional<NodeProg> prog = parser.Parse_Prog();
 
-    if (!tree.has_value())
+    if (!prog.has_value())
     {
-        std::cout << "ERROR: No exit statement found.\n";
+        std::cout << "ERROR: Invalid program.\n";
         exit(1);
     }
 
-    Generator generator(tree.value());
+    Generator generator(prog.value());
 
     // output asm to an assembly file
     {
         std::fstream file("out.asm", std::ios::out);
-        file << generator.Generate();
+        file << generator.Gen_Prog();
     }
 
     system("nasm -felf64 out.asm");

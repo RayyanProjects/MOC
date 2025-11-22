@@ -3,15 +3,15 @@
 
 std::vector<Token> Lexer::Tokenize()
 {
-    std::string buf = "";
+    std::string buf;
     std::vector<Token> tokens;
     
-    while (peak().has_value())
+    while (peek().has_value())
     {
-        if (std::isalpha(peak().value()))
+        if (std::isalpha(peek().value()))
         {
             buf.push_back(consume());
-            while (peak().has_value() && std::isalnum(peak().value()))
+            while (peek().has_value() && std::isalnum(peek().value()))
             {
                 buf.push_back(consume());
             } // Now check for keywords
@@ -21,16 +21,23 @@ std::vector<Token> Lexer::Tokenize()
                 buf.clear();
                 continue;
             }
+            else if (buf == "let")
+            {
+                tokens.push_back({.type = TokenType::TOKEN_LET});
+                buf.clear();
+                continue;
+            }
             else
             {
-                std::cout << "ERROR: NO KEYWORD FOUND\n";
-                exit(1);
+                tokens.push_back({.type = TokenType::TOKEM_IDENT, .value = buf});
+                buf.clear();
+                continue;
             }
         }
-        else if (std::isdigit(peak().value()))
+        else if (std::isdigit(peek().value()))
         {
             buf.push_back(consume());
-            while (peak().has_value() && std::isdigit(peak().value()))
+            while (peek().has_value() && std::isdigit(peek().value()))
             {
                 buf.push_back(consume());
             }
@@ -38,14 +45,32 @@ std::vector<Token> Lexer::Tokenize()
             buf.clear();
             continue;
         }
-        else if (peak().has_value() && peak().value() == ';')
+        else if (peek().value() == '(')
+        {
+             consume();
+             tokens.push_back({.type = TokenType::TOKEN_LPREN});
+             continue;
+        }
+        else if (peek().value() == ')')
+        {
+            consume();
+            tokens.push_back({.type = TokenType::TOKEN_RPREN});
+            continue;
+        }       
+        else if (peek().has_value() && peek().value() == ';')
         {
             consume();
             tokens.push_back({.type = TokenType::TOKEN_SEMI});
             buf.clear();
             continue;
         }
-        else if (std::isspace(peak().value()))
+        else if (peek().has_value() && peek().value() == '=')
+        {
+            consume();
+            tokens.push_back({.type = TokenType::TOKEN_EQ});
+            continue;
+        }
+        else if (std::isspace(peek().value()))
         {
             consume();
             continue;
